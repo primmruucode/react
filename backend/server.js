@@ -33,6 +33,9 @@ app.put('/todos/:id', async (req, res) => {
 });
 // Delete a todo
 app.delete('/todos/:id', async (req, res) => {
-  await Todo.findByIdAndRemove(req.params.id);
+  const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
+  if (!deletedTodo) { // Check if todo exists before sending response
+    return res.status(404).json({ message: 'Todo not found' });
+  }
   res.json({ message: 'Todo deleted successfully' });
 });

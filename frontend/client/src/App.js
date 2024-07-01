@@ -13,6 +13,7 @@ const App = () => {
       .catch(error => console.error(error));
   }, []);
 
+
   const addTodo = (newTodo) => {
     setTodos([...todos, newTodo]);
   };
