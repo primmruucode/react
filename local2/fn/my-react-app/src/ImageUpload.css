@@ -1,0 +1,33 @@
+.image-upload {
+    padding: 20px;
+  }
+  
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    grid-gap: 20px; /* Gap between grid items */
+  }
+  
+  .image-item {
+    position: relative;
+    padding-bottom: 0; /* Reset padding for each grid item */
+    overflow: hidden;
+  }
+  
+  .image-item img {
+    width: 100%; /* Ensure image fills its container */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Cover the container with image */
+  }
+  
+  .delete-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
