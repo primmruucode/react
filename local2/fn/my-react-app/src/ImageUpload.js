@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './ImageUpload.css'; // Import your CSS file
+import './ImageUpload.css';
 
 function arrayBufferToBase64(buffer) {
   let binary = '';
@@ -15,6 +15,9 @@ function arrayBufferToBase64(buffer) {
 const ImageUpload = () => {
   const [file, setFile] = useState(null);
   const [images, setImages] = useState([]);
+  const [selectedImageId, setSelectedImageId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const imagesPerPage = 9;
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -48,6 +51,7 @@ const ImageUpload = () => {
     try {
       await axios.delete(`http://34.126.142.20:5000/images/${id}`);
       setImages(images.filter(image => image._id !== id));
+      setSelectedImageId(null);
     } catch (err) {
       console.error(err);
     }
@@ -57,21 +61,59 @@ const ImageUpload = () => {
     fetchImages();
   }, []);
 
+  const indexOfLastImage = currentPage * imagesPerPage;
+  const indexOfFirstImage = indexOfLastImage - imagesPerPage;
+  const currentImages = images.slice(indexOfFirstImage, indexOfLastImage);
+
+  const handleNextPage = () => {
+    if (currentPage < Math.ceil(images.length / imagesPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
     <div className="image-upload">
       <h1>Image Upload</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="file" onChange={handleFileChange} />
-        <button type="submit">Upload</button>
-      </form>
       <div className="image-grid">
-        {images.map(image => (
-          <div key={image._id} className="image-item">
-            <img src={`data:${image.contentType};base64,${arrayBufferToBase64(image.imageData.data)}`} alt={image.imageName} />
-            <button className="delete-button" onClick={() => handleDelete(image._id)}>Delete</button>
+        {currentImages.map(image => (
+          <div
+            key={image._id}
+            className={`image-item ${selectedImageId === image._id ? 'selected' : ''}`}
+            onClick={() => setSelectedImageId(image._id)}
+          >
+            <img
+              src={`data:${image.contentType};base64,${arrayBufferToBase64(image.imageData.data)}`}
+              alt={image.imageName}
+              onLoad={(e) => e.target.classList.add('loaded')}
+            />
+            {selectedImageId === image._id && (
+              <button
+                className="delete-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(image._id);
+                }}
+              >
+                Delete
+              </button>
+            )}
           </div>
         ))}
       </div>
+      <div className="pagination">
+        <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
+        <button onClick={handleNextPage} disabled={currentPage === Math.ceil(images.length / imagesPerPage)}>Next</button>
+      </div>
+      <form className="upload-form" onSubmit={handleSubmit}>
+        <input type="file" onChange={handleFileChange} />
+        <button type="submit">Upload</button>
+      </form>
     </div>
   );
 };

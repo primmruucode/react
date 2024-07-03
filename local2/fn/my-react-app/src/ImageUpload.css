@@ -1,33 +1,76 @@
+/* ImageUpload.css */
+
 .image-upload {
-    padding: 20px;
-  }
-  
-  .image-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns */
-    grid-gap: 20px; /* Gap between grid items */
-  }
-  
-  .image-item {
-    position: relative;
-    padding-bottom: 0; /* Reset padding for each grid item */
-    overflow: hidden;
-  }
-  
-  .image-item img {
-    width: 100%; /* Ensure image fills its container */
-    height: auto; /* Maintain aspect ratio */
-    object-fit: cover; /* Cover the container with image */
-  }
-  
-  .delete-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
+  /* Your styles for the image upload container */
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+
+.image-item {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* Makes it a square */
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.image-item img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-item img.loaded {
+  opacity: 1;
+}
+
+.image-item.selected {
+  outline: 2px solid blue;
+  outline-offset: -2px;
+}
+
+.delete-button {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: darkred;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.pagination button {
+  margin: 0 5px;
+}
