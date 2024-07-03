@@ -4,7 +4,7 @@ def profile_build = params.profile_build
 properties([
   parameters([
     string(defaultValue: "1.1.1", description: 'Docker Version to build', name: 'image_version', trim: true),
-    Choice(choices: ['Frontend', 'Backend'], description: 'Select Frontend or Backend to build', name: 'profile_build')
+    choice(choices: ['Frontend', 'Backend'], description: 'Select Frontend or Backend to build', name: 'profile_build')
   ])
 ])
 pipeline{
