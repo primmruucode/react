@@ -15,7 +15,7 @@ function arrayBufferToBase64(buffer) {
 const ImageUpload = () => {
   const [file, setFile] = useState(null);
   const [images, setImages] = useState([]);
-  const [selectedImageId, setSelectedImageId] = useState(null);
+  const [selectedImageIds, setSelectedImageIds] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const imagesPerPage = 9;
 
@@ -47,14 +47,24 @@ const ImageUpload = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
-      await axios.delete(`http://34.126.142.20:5000/images/${id}`);
-      setImages(images.filter(image => image._id !== id));
-      setSelectedImageId(null);
+      await Promise.all(selectedImageIds.map(id => axios.delete(`http://34.126.142.20:5000/images/${id}`)));
+      setImages(images.filter(image => !selectedImageIds.includes(image._id)));
+      setSelectedImageIds([]);
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handleImageClick = (id) => {
+    setSelectedImageIds(prevSelectedIds => {
+      if (prevSelectedIds.includes(id)) {
+        return prevSelectedIds.filter(imageId => imageId !== id);
+      } else {
+        return [...prevSelectedIds, id];
+      }
+    });
   };
 
   useEffect(() => {
@@ -65,7 +75,7 @@ const ImageUpload = () => {
   const indexOfFirstImage = indexOfLastImage - imagesPerPage;
   const currentImages = images.slice(indexOfFirstImage, indexOfLastImage);
 
-  const handleNextPage = () => {
+/*   const handleNextPage = () => {
     if (currentPage < Math.ceil(images.length / imagesPerPage)) {
       setCurrentPage(currentPage + 1);
     }
@@ -75,45 +85,39 @@ const ImageUpload = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
-  };
+  }; */
 
   return (
     <div className="image-upload">
-      <h1>Image Upload</h1>
+      <h1>Your Wardrobe</h1>
       <div className="image-grid">
         {currentImages.map(image => (
           <div
             key={image._id}
-            className={`image-item ${selectedImageId === image._id ? 'selected' : ''}`}
-            onClick={() => setSelectedImageId(image._id)}
+            className={`image-item ${selectedImageIds.includes(image._id) ? 'selected' : ''}`}
+            onClick={() => handleImageClick(image._id)}
           >
             <img
               src={`data:${image.contentType};base64,${arrayBufferToBase64(image.imageData.data)}`}
               alt={image.imageName}
               onLoad={(e) => e.target.classList.add('loaded')}
             />
-            {selectedImageId === image._id && (
-              <button
-                className="delete-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(image._id);
-                }}
-              >
-                Delete
-              </button>
-            )}
           </div>
         ))}
       </div>
-      <div className="pagination">
-        <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
-        <button onClick={handleNextPage} disabled={currentPage === Math.ceil(images.length / imagesPerPage)}>Next</button>
-      </div>
-      <form className="upload-form" onSubmit={handleSubmit}>
-        <input type="file" onChange={handleFileChange} />
-        <button type="submit">Upload</button>
-      </form>
+      <footer>
+{/*         <div className="pagination">
+          <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
+          <button onClick={handleNextPage} disabled={currentPage === Math.ceil(images.length / imagesPerPage)}>Next</button>
+        </div> */}
+        <form className="upload-form" onSubmit={handleSubmit}>
+          <input type="file" onChange={handleFileChange} />
+          <button type="submit" class="button-50" role="button">Upload</button>
+        </form>
+        {selectedImageIds.length > 0 && (
+          <button className="delete-button" onClick={handleDelete}>Delete Selected</button>
+        )}
+      </footer>
     </div>
   );
 };

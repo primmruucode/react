@@ -1,5 +1,5 @@
 import React from 'react';
-import ImageUpload from './ImageUpload.js';
+import ImageUpload from './pages/ImageUpload';
 import './App.css'; // Import your CSS file
 function App() {
   return (

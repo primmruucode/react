@@ -1,0 +1,125 @@
+/* ImageUpload.css */
+
+.image-upload {
+  /* Your styles for the image upload container */
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 3px;
+  padding: 3px;
+  margin-top: 50px;
+}
+
+.image-item {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* Makes it a square */
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.image-item img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-item img.loaded {
+  opacity: 1;
+}
+
+.image-item.selected {
+  outline: 5px solid blue;
+  outline-offset: -3px;
+}
+
+/* .delete-button {
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+} */
+
+/* .delete-button:hover {
+  background-color: darkred;
+} */
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.pagination button {
+  margin: 0 5px;
+}
+
+
+/* .delete-button {
+  padding: 10px 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+} */
+
+/* .delete-button:hover {
+  background-color: darkred;
+} */
+
+/* .confirm-delete-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: orange;
+  color: white;
+  cursor: pointer;
+}
+ */
+/* .confirm-delete-button:hover {
+  background-color: darkorange;
+} */
+
+/* .delete-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} */
+.image-upload-page1 {
+  padding: 20px;
+}
+
+.upload-form {
+  margin-bottom: 20px;
+}
+
+.image-preview {
+  margin-top: 20px;
+}
+
+.image-preview img {
+  max-width: 100%; /* Ensure the image fits within its container */
+  height: auto; /* Maintain aspect ratio */
+  border: 1px solid #ccc;
+}
