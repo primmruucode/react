@@ -1,0 +1,72 @@
+def workDir = "./code"
+properties([
+  parameters([
+    string(defaultValue: "master", description: 'branch for json, host and api path to apply', name: 'api_path_branch', trim: true),
+    string(defaultValue: "master", description: 'branch for profile, config for istio gateway', name: 'profile_branch', trim: true)
+  ])
+])
+pipeline{
+    agent any
+    stages{
+      stage("Copy template"){
+        steps{
+          script{
+            dir ("${workDir}"){
+                echo "############## get template ###############"
+                sh """
+                  ls
+                  
+
+                """
+/*                 sh "ls"
+                jsonPATH = readJSON file: "./mock-vs2.json"
+                envMSAll = jsonPATH.parameters
+                for (hosts in envMSAll)  {
+                        Host = "${hosts.host}"
+                        Name = "${hosts.vs_name}"
+                        Path = hosts.mock_path
+                        for (paths in Path){
+                            sh """
+                            #!/bin/bash
+                            echo "${paths}"
+                            cat small-path.json > temppath.json
+                            sed -i '' 's|<path-to-replace>|"${paths}"|g' temppath.json
+                            cat temppath.json >> tellytemppath2.json
+                            echo ',' >> tellytemppath2.json
+                            """
+                        }
+                        //head -c -2 tellytemppath2.json > tellytemppath.json
+                        sh """
+                        #!/bin/bash
+                        cat tellytemppath2.json > tellytemppath.json
+                        cat chunked-path.json > temp.json
+                        cat mock-vs.json > temp2.json
+                        sed -i '' -e '/<chunck-path-to-replace>/{
+                        r tellytemppath.json
+                        d
+                        }' temp.json
+                        sed -i '' -e '/<mock-to-replace>/{
+                        r temp.json
+                        d
+                        }' temp2.json
+                        sed -i '' 's|<host-to-replace>|"${Host}"|g' temp2.json
+                        sed -i '' 's|<name-to-replace>|"${Name}"|g' temp2.json
+                        cat temp2.json
+                        rm tellytemppath.json
+                        rm tellytemppath2.json
+                        """ */
+                       
+                   
+                } 
+                
+            }
+          }
+        }
+      }
+    }
+  post {
+      cleanup {
+          cleanWs()
+      }
+  }
+}
