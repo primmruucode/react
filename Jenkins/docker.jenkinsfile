@@ -1,8 +1,10 @@
 def workDir = "./code"
+def image_version = params.image_version
+def profile_build = params.profile_build
 properties([
   parameters([
-    string(defaultValue: "master", description: 'branch for json, host and api path to apply', name: 'api_path_branch', trim: true),
-    string(defaultValue: "master", description: 'branch for profile, config for istio gateway', name: 'profile_branch', trim: true)
+    string(defaultValue: "1.1.1", description: 'Docker Version to build', name: 'image_version', trim: true),
+    Choice(choices: ['Frontend', 'Backend'], description: 'Select Frontend or Backend to build', name: 'profile_build')
   ])
 ])
 pipeline{
@@ -14,6 +16,13 @@ pipeline{
             dir ("${workDir}"){
                 echo "############## get template ###############"
                 sh """
+                  cd ~/Documents/react/local2/fn/my-react-app
+                  docker buildx build --platform linux/amd64 -t primmruuhub/front-end-wr:1.1.4.1 .
+                  docker push primmruuhub/front-end-wr:1.1.4.1
+                  ls
+                  cd ~/Documents/react/local2/dep
+                  sh "sed -i 's|${versionToReplace}|${newVersion}|g' front-dep.yaml"
+        
                   ls
                   
 
