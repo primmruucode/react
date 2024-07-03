@@ -15,7 +15,7 @@ const Layout = () => {
             <Link to="/"><FontAwesomeIcon icon={faHome} className="icon-large" /></Link>
           </li>
           <li>
-            <Link to="/User"><FontAwesomeIcon icon={faUser} className="icon-large" /></Link>
+            <Link to="/Login"><FontAwesomeIcon icon={faUser} className="icon-large" /></Link>
           </li>
           <li>
             <Link to="/App"><FontAwesomeIcon icon={faFire} className="icon-superlarge" /></Link>
