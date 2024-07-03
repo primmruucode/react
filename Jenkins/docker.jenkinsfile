@@ -54,10 +54,10 @@ pipeline{
                         cat temp2.json
                         rm tellytemppath.json
                         rm tellytemppath2.json
-                        """ */
+                        """ 
                        
                    
-                } 
+                } */
                 
             }
           }
