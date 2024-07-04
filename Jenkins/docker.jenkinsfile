@@ -52,9 +52,9 @@ pipeline{
                 sed -i '' "s|image: primmruuhub/${image_name}:[^ ]*|image: primmruuhub/${image_name}:${image_version}|g" ${yamlfile}
                 """
                 echo "############## Final YAML ###############"
-                sh "cat ${yamlfile}"
+                sh "cat ~/Documents/react/local2/dep/${yamlfile}"
                 echo "############## Current Version ###############"
-                sh "grep 'primmruuhub' ${yamlfile}"
+                sh "grep 'primmruuhub' ~/Documents/react/local2/dep/${yamlfile}"
             }
           }
         }
@@ -66,8 +66,8 @@ pipeline{
                 echo "############## Applying to kube ###############"
                 sh """
                 cd ~/Documents/react/local2/dep
-                kubectl get pod
                 kubectl apply -f ${yamlfile}
+                kubectl get pod                
                 """
             }
           }
