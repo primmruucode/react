@@ -1,6 +1,8 @@
 def workDir = "./code"
 def image_version = params.image_version
 def profile_build = params.profile_build
+def yamlfile
+def image_name
 properties([
   parameters([
     string(defaultValue: "1.1.1", description: 'Docker Version to build', name: 'image_version', trim: true),
@@ -14,13 +16,20 @@ pipeline{
         steps{
           script{
             dir ("${workDir}"){
+                if (params.profile_build == 'Frontend') {
+                    yamlfile = "front-dep.yaml"
+                    image_name = "front-end-wr"
+                } else {
+                    yamlfile = "mongo-dep.yaml"
+                    image_name = "back-end-wr"
+                }
                 echo "############## Build Start ###############"
                 echo "Building Docker Image for ${profile_build}"
-                echo "With tag primmruuhub/front-end-wr:${image_version}"
+                echo "With tag primmruuhub/${image_name}:${image_version}"
                 sh """
                 cd ~/Documents/react/local2/fn/my-react-app
-                docker buildx build --platform linux/amd64 -t primmruuhub/front-end-wr:${image_version} .
-                docker push primmruuhub/front-end-wr:${image_version}
+                docker buildx build --platform linux/amd64 -t primmruuhub/${image_name}:${image_version} .
+                docker push primmruuhub/${image_name}:${image_version}
                 """
 
             }
@@ -36,12 +45,12 @@ pipeline{
                 sh """
                 cd ~/Documents/react/local2/dep
                 echo "Current version"
-                grep 'primmruuhub' front-dep.yaml
-                sed -i '' "s|image: primmruuhub/front-end-wr:[^ ]*|image: primmruuhub/front-end-wr:${image_version}|g" front-dep.yaml
+                grep 'primmruuhub' ${yamlfile}
+                sed -i '' "s|image: primmruuhub/${image_name}:[^ ]*|image: primmruuhub/${image_name}:${image_version}|g" ${yamlfile}
                 echo "############## Final YAML ###############"
-                cat front-dep.yaml
+                cat ${yamlfile}
                 echo "############## Current Version ###############"
-                grep 'primmruuhub' front-dep.yaml
+                grep 'primmruuhub' ${yamlfile}
                 """
             }
           }
@@ -55,7 +64,7 @@ pipeline{
                 sh """
                 cd ~/Documents/react/local2/dep
                 kubectl get pod
-                kubectl apply -f front-dep.yaml
+                kubectl apply -f ${yamlfile}
                 """
             }
           }
