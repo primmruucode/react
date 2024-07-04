@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './ImageUpload.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./ImageUpload.css";
 
 function arrayBufferToBase64(buffer) {
-  let binary = '';
+  let binary = "";
   const bytes = new Uint8Array(buffer);
   const len = bytes.byteLength;
   for (let i = 0; i < len; i++) {
@@ -26,12 +26,16 @@ const ImageUpload = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append("image", file);
 
     try {
-      const res = await axios.post('http://34.126.142.20:5000/images/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const res = await axios.post(
+        "http://34.126.142.20:5000/images/upload",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       setImages([...images, res.data]);
     } catch (err) {
       console.error(err);
@@ -40,7 +44,7 @@ const ImageUpload = () => {
 
   const fetchImages = async () => {
     try {
-      const res = await axios.get('http://34.126.142.20:5000/images');
+      const res = await axios.get("http://34.126.142.20:5000/images");
       setImages(res.data);
     } catch (err) {
       console.error(err);
@@ -49,8 +53,14 @@ const ImageUpload = () => {
 
   const handleDelete = async () => {
     try {
-      await Promise.all(selectedImageIds.map(id => axios.delete(`http://34.126.142.20:5000/images/${id}`)));
-      setImages(images.filter(image => !selectedImageIds.includes(image._id)));
+      await Promise.all(
+        selectedImageIds.map((id) =>
+          axios.delete(`http://34.126.142.20:5000/images/${id}`)
+        )
+      );
+      setImages(
+        images.filter((image) => !selectedImageIds.includes(image._id))
+      );
       setSelectedImageIds([]);
     } catch (err) {
       console.error(err);
@@ -58,9 +68,9 @@ const ImageUpload = () => {
   };
 
   const handleImageClick = (id) => {
-    setSelectedImageIds(prevSelectedIds => {
+    setSelectedImageIds((prevSelectedIds) => {
       if (prevSelectedIds.includes(id)) {
-        return prevSelectedIds.filter(imageId => imageId !== id);
+        return prevSelectedIds.filter((imageId) => imageId !== id);
       } else {
         return [...prevSelectedIds, id];
       }
@@ -75,7 +85,7 @@ const ImageUpload = () => {
   const indexOfFirstImage = indexOfLastImage - imagesPerPage;
   const currentImages = images.slice(indexOfFirstImage, indexOfLastImage);
 
-/*   const handleNextPage = () => {
+  /*   const handleNextPage = () => {
     if (currentPage < Math.ceil(images.length / imagesPerPage)) {
       setCurrentPage(currentPage + 1);
     }
@@ -91,31 +101,39 @@ const ImageUpload = () => {
     <div className="image-upload">
       <h1>Your Wardrobe</h1>
       <div className="image-grid">
-        {currentImages.map(image => (
+        {currentImages.map((image) => (
           <div
             key={image._id}
-            className={`image-item ${selectedImageIds.includes(image._id) ? 'selected' : ''}`}
+            className={`image-item ${
+              selectedImageIds.includes(image._id) ? "selected" : ""
+            }`}
             onClick={() => handleImageClick(image._id)}
           >
             <img
-              src={`data:${image.contentType};base64,${arrayBufferToBase64(image.imageData.data)}`}
+              src={`data:${image.contentType};base64,${arrayBufferToBase64(
+                image.imageData.data
+              )}`}
               alt={image.imageName}
-              onLoad={(e) => e.target.classList.add('loaded')}
+              onLoad={(e) => e.target.classList.add("loaded")}
             />
           </div>
         ))}
       </div>
       <footer>
-{/*         <div className="pagination">
+        {/*         <div className="pagination">
           <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
           <button onClick={handleNextPage} disabled={currentPage === Math.ceil(images.length / imagesPerPage)}>Next</button>
         </div> */}
         <form className="upload-form" onSubmit={handleSubmit}>
           <input type="file" onChange={handleFileChange} />
-          <button type="submit" class="button-50" role="button">Upload</button>
+          <button type="submit" class="button-50" role="button">
+            Upload
+          </button>
         </form>
         {selectedImageIds.length > 0 && (
-          <button className="delete-button" onClick={handleDelete}>Delete Selected</button>
+          <button className="delete-button" onClick={handleDelete}>
+            Delete Selected
+          </button>
         )}
       </footer>
     </div>

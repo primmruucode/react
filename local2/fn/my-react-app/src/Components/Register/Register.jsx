@@ -62,16 +62,16 @@ const Register = () => {
 
     try {
       const res = await axios.post("http://34.126.142.20:5000/api/users", user);
-      console.log('User created:', res.data);
-      alert('User created successfully');
+      console.log("User created:", res.data);
+      alert("User created successfully");
       navigate("/login", { replace: true });
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        alert('Username already exists');
-        console.error('Username already exists:', error.response.data);
+        alert("Username already exists");
+        console.error("Username already exists:", error.response.data);
       } else {
-        alert('Error creating user');
-        console.error('Error creating user:', error);
+        alert("Error creating user");
+        console.error("Error creating user:", error);
       }
     }
   };

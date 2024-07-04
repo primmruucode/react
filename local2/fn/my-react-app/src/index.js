@@ -5,16 +5,15 @@ import Home from "./pages/Home.jsx";
 import Upload from "./pages/Upload"; // Assuming this is the correct import
 import App from "./App";
 import User from "./pages/User.jsx";
-import './pages/styles.css'; // Import the CSS file
-import Wardrobe from './pages/Wardrobe';
+import "./pages/styles.css"; // Import the CSS file
+import Wardrobe from "./pages/Wardrobe";
 /* import Profile from "./Components/Profile/Profile"; */
 import Login from "./Components/Login/Login.jsx";
 import Register from "./Components/Register/Register.jsx";
-import './App.css'; // Import your CSS file
+import "./App.css"; // Import your CSS file
 
 export default function Apps() {
   return (
-    
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
