@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: node
-        image: primmruuhub/back-end-wr:1.0.5
+        image: primmruuhub/back-end-wr:1.1.3
         ports:
         - containerPort: 5000
 ---
