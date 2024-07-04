@@ -3,6 +3,7 @@ def image_version = params.image_version
 def profile_build = params.profile_build
 def yamlfile
 def image_name
+def path_file
 properties([
   parameters([
     string(defaultValue: "1.1.1", description: 'Docker Version to build', name: 'image_version', trim: true),
@@ -19,15 +20,17 @@ pipeline{
                 if (params.profile_build == 'Frontend') {
                     yamlfile = "front-dep.yaml"
                     image_name = "front-end-wr"
+                    path_file = "~/Documents/react/local2/fn/my-react-app"
                 } else {
                     yamlfile = "mongo-dep.yaml"
                     image_name = "back-end-wr"
+                    path_file = "~/Documents/react/local2/bn"
                 }
                 echo "############## Build Start ###############"
                 echo "Building Docker Image for ${profile_build}"
                 echo "With tag primmruuhub/${image_name}:${image_version}"
                 sh """
-                cd ~/Documents/react/local2/fn/my-react-app
+                cd ${path_file}
                 docker buildx build --platform linux/amd64 -t primmruuhub/${image_name}:${image_version} .
                 docker push primmruuhub/${image_name}:${image_version}
                 """
