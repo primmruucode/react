@@ -10,64 +10,53 @@ properties([
 pipeline{
     agent any
     stages{
-      stage("Copy template"){
+      stage("Build Docker Image"){
         steps{
           script{
             dir ("${workDir}"){
-                echo "############## get template ###############"
+                echo "############## Build Start ###############"
+                echo "Building Docker Image for ${profile_build}"
+                echo "With tag primmruuhub/front-end-wr:${image_version}"
                 sh """
-                  cd ~/Documents/react/local2/fn/my-react-app
-                  docker buildx build --platform linux/amd64 -t primmruuhub/front-end-wr:1.1.4.1 .
-                  docker push primmruuhub/front-end-wr:1.1.4.1
-                  ls
-                  cd ~/Documents/react/local2/dep
-                  sh "sed -i 's|${versionToReplace}|${newVersion}|g' front-dep.yaml"
-        
-                  ls
-                  
-
+                cd ~/Documents/react/local2/fn/my-react-app
+                docker buildx build --platform linux/amd64 -t primmruuhub/front-end-wr:${image_version} .
+                docker push primmruuhub/front-end-wr:${image_version}
                 """
-/*                 sh "ls"
-                jsonPATH = readJSON file: "./mock-vs2.json"
-                envMSAll = jsonPATH.parameters
-                for (hosts in envMSAll)  {
-                        Host = "${hosts.host}"
-                        Name = "${hosts.vs_name}"
-                        Path = hosts.mock_path
-                        for (paths in Path){
-                            sh """
-                            #!/bin/bash
-                            echo "${paths}"
-                            cat small-path.json > temppath.json
-                            sed -i '' 's|<path-to-replace>|"${paths}"|g' temppath.json
-                            cat temppath.json >> tellytemppath2.json
-                            echo ',' >> tellytemppath2.json
-                            """
-                        }
-                        //head -c -2 tellytemppath2.json > tellytemppath.json
-                        sh """
-                        #!/bin/bash
-                        cat tellytemppath2.json > tellytemppath.json
-                        cat chunked-path.json > temp.json
-                        cat mock-vs.json > temp2.json
-                        sed -i '' -e '/<chunck-path-to-replace>/{
-                        r tellytemppath.json
-                        d
-                        }' temp.json
-                        sed -i '' -e '/<mock-to-replace>/{
-                        r temp.json
-                        d
-                        }' temp2.json
-                        sed -i '' 's|<host-to-replace>|"${Host}"|g' temp2.json
-                        sed -i '' 's|<name-to-replace>|"${Name}"|g' temp2.json
-                        cat temp2.json
-                        rm tellytemppath.json
-                        rm tellytemppath2.json
-                        """ 
-                       
-                   
-                } */
-                
+
+            }
+          }
+        }
+      }
+     stage("Update deployment file"){
+        steps{
+          script{
+            dir ("${workDir}"){
+                echo "############## Replace Start ###############"
+                echo "Replace deployment for for ${profile_build}"
+                sh """
+                cd ~/Documents/react/local2/dep
+                echo "Current version"
+                grep 'primmruuhub' front-dep.yaml
+                sed -i '' "s|image: primmruuhub/front-end-wr:[^ ]*|image: primmruuhub/front-end-wr:${image_version}|g" front-dep.yaml
+                echo "############## Final YAML ###############"
+                cat front-dep.yaml
+                echo "############## Current Version ###############"
+                grep 'primmruuhub' front-dep.yaml
+                """
+            }
+          }
+        }
+      }
+    stage("Apply to kube"){
+        steps{
+          script{
+            dir ("${workDir}"){
+                echo "############## Applying to kube ###############"
+                sh """
+                cd ~/Documents/react/local2/dep
+                kubectl get pod
+                kubectl apply -f front-dep.yaml
+                """
             }
           }
         }
