@@ -11,9 +11,11 @@ import Wardrobe from "./pages/Wardrobe";
 import Login from "./Components/Login/Login.jsx";
 import Register from "./Components/Register/Register.jsx";
 import "./App.css"; // Import your CSS file
+import { AuthProvider } from './Components/Auth/AuthContext.jsx';
 
 export default function Apps() {
   return (
+    <AuthProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -28,6 +30,7 @@ export default function Apps() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 
